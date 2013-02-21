@@ -2,7 +2,7 @@
 
 function write_log($message, $mail = '', $file = '') {
 	
-	if (defined('LOGFILE'))
+	if ($file == '' and defined('LOGFILE'))
 		$file = LOGFILE;
 
 	$dir = dirname($file);
@@ -11,12 +11,12 @@ function write_log($message, $mail = '', $file = '') {
 		if (!mkdir($dir, 0775, True))
 			return False;
 	
-	$value = '['.date('d.m.y\ H:i:s').'] '.$message.chr(13);		
-
-	file_put_contents($file, $value); # saved message
+	$date_str = '['.date('d.m.y\ H:i:s').']';
+	$value = $date_str.' '.$message.chr(13);		
 
 	if ($mail !== '')  # send mail 
-		mail($mail, "log ".$mail, $value); 
-	
-	
+		mail($mail, "log ".$date_str, $value);
+
+	return file_put_contents($file, $value, FILE_APPEND); # saved message
+
 }
